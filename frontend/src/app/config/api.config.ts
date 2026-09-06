@@ -25,9 +25,8 @@ export function getApiBaseUrl(): string {
       return 'http://localhost:3000/api';
     }
 
-    // 4. Production on Vercel: use relative /api (rewritten via vercel.json to Render backend)
-    // or fallback to Render URL if configured
-    return '/api';
+    // 4. Production on Vercel: default directly to your live Render backend
+    return 'https://aashiyana-restaurent.onrender.com/api';
   }
 
   return 'http://localhost:3000/api';
