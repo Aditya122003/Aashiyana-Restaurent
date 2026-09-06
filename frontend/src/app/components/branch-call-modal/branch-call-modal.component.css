@@ -1,0 +1,194 @@
+.call-modal-box {
+  padding: 36px;
+  max-width: 640px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FAF5EE;
+  color: #1C1917;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.header-icon {
+  width: 54px;
+  height: 54px;
+  background: #FEF3C7;
+  color: #D97706;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin: 0 auto 12px;
+}
+
+.modal-title {
+  font-size: 1.75rem;
+  color: #1C1917;
+  margin-bottom: 4px;
+}
+
+.modal-subtitle {
+  color: #6B7280;
+  font-size: 0.9rem;
+}
+
+.branches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.branch-card-row {
+  background: #FAF5EE;
+  border: 1.5px solid #F3ECE1;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.branch-card-row:hover, .branch-card-row.active {
+  border-color: #F59E0B;
+  background: #FFFDF9;
+}
+
+.branch-card-row.active {
+  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.1);
+}
+
+.branch-meta {
+  flex: 1;
+}
+
+.branch-headline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.branch-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1C1917;
+}
+
+.hq-badge {
+  background: #D97706;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.active-badge {
+  background: #15803D;
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.branch-address {
+  font-size: 0.78rem;
+  color: #6B7280;
+  margin-bottom: 2px;
+}
+
+.branch-hours {
+  font-size: 0.72rem;
+  color: #9CA3AF;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.branch-call-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.phone-call-btn {
+  background: #ECFDF5;
+  border: 1.5px solid #A7F3D0;
+  color: #047857;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 14px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(4, 120, 87, 0.08);
+}
+
+.phone-call-btn:hover {
+  background: #059669;
+  color: #FFFFFF;
+  border-color: #059669;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.phone-number {
+  letter-spacing: 0.3px;
+}
+
+.call-badge {
+  background: #D1FAE5;
+  color: #065F46;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.phone-call-btn:hover .call-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.modal-footer-note {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #F3ECE1;
+  font-size: 0.8rem;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

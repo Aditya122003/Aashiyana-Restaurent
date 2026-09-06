@@ -1,0 +1,824 @@
+<div class="admin-dashboard-layout">
+  
+  <!-- Dashboard Top Navbar -->
+  <header class="admin-topbar">
+    <div class="admin-container topbar-content">
+      
+      <div class="topbar-left">
+        <div class="admin-logo-pill">
+          <img src="/ashiana-logo.png" alt="Ashiana Official Logo" class="admin-topbar-logo" />
+          <span>Ashiana Superadmin Portal</span>
+        </div>
+        <span class="portal-env-tag">LIVE BRANCH CONTROLLER</span>
+      </div>
+
+      <div class="topbar-right">
+        <a routerLink="/" target="_blank" class="btn-live-preview">
+          <i class="ri-external-link-line"></i>
+          <span>View Public Website</span>
+        </a>
+
+        <div class="user-chip">
+          <i class="ri-user-settings-line"></i>
+          <span>{{ authService.currentUser()?.name || 'Superadmin' }}</span>
+        </div>
+
+        <button class="btn-logout" (click)="logout()" title="Sign Out">
+          <i class="ri-logout-box-r-line"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Feedback Toast -->
+  <div class="feedback-toast" *ngIf="feedbackToast">
+    <i class="ri-checkbox-circle-fill"></i>
+    <span>{{ feedbackToast }}</span>
+  </div>
+
+  <!-- Dashboard Navigation Tabs -->
+  <div class="dashboard-tabs-bar">
+    <div class="admin-container tabs-container">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'branch-menu'"
+        (click)="setTab('branch-menu')"
+      >
+        <i class="ri-restaurant-2-line"></i>
+        <span>Branch Menu, Prices & Images</span>
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'today-reservations'"
+        (click)="setTab('today-reservations')"
+      >
+        <i class="ri-time-line"></i>
+        <span>Today's Reserved Tables ({{ todayReservations.length }})</span>
+        <span class="tab-live-badge" *ngIf="todayReservations.length > 0">{{ todayReservations.length }}</span>
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'calendar-reports'"
+        (click)="setTab('calendar-reports')"
+      >
+        <i class="ri-file-chart-line"></i>
+        <span>Calendar Reports & CSV 📥</span>
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'all-reservations'"
+        (click)="setTab('all-reservations')"
+      >
+        <i class="ri-calendar-event-line"></i>
+        <span>All Bookings ({{ allReservations.length }})</span>
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'whatsapp-orders'"
+        (click)="setTab('whatsapp-orders')"
+      >
+        <i class="ri-whatsapp-line"></i>
+        <span>WhatsApp Orders ({{ ordersList.length }})</span>
+      </button>
+
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'branches-info'"
+        (click)="setTab('branches-info')"
+      >
+        <i class="ri-store-2-line"></i>
+        <span>5 Shimla Outlets</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="dashboard-main admin-container">
+
+    <!-- ================= TAB 1: BRANCH MENU, PRICE & IMAGE MANAGER ================= -->
+    <section *ngIf="activeTab === 'branch-menu'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <h2 class="tab-title">Branch-Specific Menu, Pricing & Images</h2>
+          <p class="tab-desc">
+            Changes saved here reflect <strong>live immediately</strong> on the public website for the selected outlet.
+          </p>
+        </div>
+
+        <div class="header-action-group">
+          <!-- Branch Selector Dropdown -->
+          <div class="branch-picker-box">
+            <label><i class="ri-map-pin-2-fill"></i> Select Outlet:</label>
+            <select [(ngModel)]="selectedBranchId" (change)="onBranchSelectChange()" class="branch-select">
+              <option *ngFor="let b of branchService.branches()" [value]="b.id">
+                {{ b.name }}
+              </option>
+            </select>
+          </div>
+
+          <button class="btn-primary" (click)="openAddDishModal()">
+            <i class="ri-add-circle-line"></i>
+            <span>Add New Dish For This Branch</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Branch Banner -->
+      <div class="branch-info-banner" *ngIf="selectedBranchObj">
+        <div class="banner-left">
+          <i class="ri-store-3-line banner-icon"></i>
+          <div>
+            <strong>Managing Menu for: {{ selectedBranchObj.name }}</strong>
+            <p>{{ selectedBranchObj.address }} • WhatsApp: +{{ selectedBranchObj.whatsapp }}</p>
+          </div>
+        </div>
+        <div class="banner-right">
+          <span class="badge-total-items">{{ activeBranchDishes.length }} Dishes Available</span>
+        </div>
+      </div>
+
+      <!-- Dishes Table -->
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Dish & Image</th>
+              <th>Category</th>
+              <th>Branch Price (₹)</th>
+              <th>Availability</th>
+              <th>Quick Save</th>
+              <th>Full Edit / Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of activeBranchDishes; trackBy: trackByDishId">
+              <td>
+                <div class="dish-table-cell">
+                  <div class="dish-thumb-wrapper">
+                    <img [src]="branchPriceInputs[item.id] ? branchPriceInputs[item.id].image : item.image" [alt]="item.name" class="dish-thumb" />
+                  </div>
+                  <div>
+                    <strong class="dish-name-cell">{{ item.name }}</strong>
+                    <div class="dish-cell-meta">
+                      <span [class]="item.isVeg ? 'veg-badge' : 'non-veg-badge'">
+                        {{ item.isVeg ? 'Pure Veg' : 'Non-Veg' }}
+                      </span>
+                      <span>{{ item.unit }}</span>
+                      <span class="special-tag" *ngIf="item.isPopular">⭐ Special</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <span class="category-chip">{{ item.category }}</span>
+              </td>
+
+              <td>
+                <div class="price-input-cell" *ngIf="branchPriceInputs[item.id]">
+                  <span class="currency-prefix">₹</span>
+                  <input 
+                    type="number" 
+                    [(ngModel)]="branchPriceInputs[item.id].price" 
+                    class="price-edit-input"
+                    title="Edit price for this branch"
+                  />
+                </div>
+              </td>
+
+              <td>
+                <label class="stock-toggle" *ngIf="branchPriceInputs[item.id]">
+                  <input 
+                    type="checkbox" 
+                    [(ngModel)]="branchPriceInputs[item.id].available" 
+                  />
+                  <span class="toggle-slider"></span>
+                  <span class="stock-label" [class.in-stock]="branchPriceInputs[item.id].available">
+                    {{ branchPriceInputs[item.id].available ? 'Live In Stock' : 'Out of Stock' }}
+                  </span>
+                </label>
+              </td>
+
+              <td>
+                <button class="btn-save-row" (click)="quickSaveBranchRow(item)" title="Save price & stock for this branch">
+                  <i class="ri-check-line"></i> Save
+                </button>
+              </td>
+
+              <td>
+                <div class="action-btn-group">
+                  <button class="btn-action-edit" (click)="openEditDishModal(item)" title="Edit dish details, image & branch price">
+                    <i class="ri-edit-line"></i> Edit & Image
+                  </button>
+                  <button class="btn-icon-delete" (click)="deleteDish(item)" title="Delete dish completely">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: TODAY'S RESERVED TABLES ================= -->
+    <section *ngIf="activeTab === 'today-reservations'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <div class="today-title-wrap">
+            <h2 class="tab-title">Today's Reserved Tables (आज के रिज़र्वेशन)</h2>
+            <span class="live-date-pill"><i class="ri-calendar-check-line"></i> Today: {{ getTodayYMD() }}</span>
+          </div>
+          <p class="tab-desc">
+            Live schedule of tables reserved for today with customer contact numbers and exact booking time slots.
+          </p>
+        </div>
+
+        <div class="filter-wrap">
+          <label><i class="ri-filter-3-line"></i> Filter Branch:</label>
+          <select [(ngModel)]="todayFilterBranch" (change)="loadTodayReservations()" class="branch-select">
+            <option value="all">All Shimla Outlets</option>
+            <option *ngFor="let b of branchService.branches()" [value]="b.id">{{ b.name }}</option>
+          </select>
+          <button class="btn-secondary" (click)="loadTodayReservations()">
+            <i class="ri-refresh-line"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Today's Reservations Table -->
+      <div class="table-responsive" *ngIf="todayReservations.length > 0; else noTodayResTpl">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Time Slot (कितने बजे है)</th>
+              <th>Customer Details</th>
+              <th>Branch Outlet</th>
+              <th>Party Size</th>
+              <th>Seating & Notes</th>
+              <th>Status</th>
+              <th>Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of todayReservations" class="today-res-row">
+              <td>
+                <div class="time-slot-badge">
+                  <i class="ri-time-line"></i>
+                  <span>{{ r.timeSlot }}</span>
+                </div>
+                <small class="res-ref-sub">ID: #{{ r.id }}</small>
+              </td>
+
+              <td>
+                <strong class="cust-name">{{ r.customerName }}</strong>
+                <a [href]="'tel:' + r.customerPhone" class="cust-phone-btn" title="Click to call customer">
+                  <i class="ri-phone-fill"></i> {{ r.customerPhone }}
+                </a>
+              </td>
+
+              <td>
+                <span class="branch-badge">{{ r.branchName }}</span>
+              </td>
+
+              <td>
+                <div class="guests-chip">
+                  <i class="ri-user-smile-line"></i>
+                  <strong>{{ r.guests }} Persons</strong>
+                </div>
+              </td>
+
+              <td>
+                <div class="seating-text">{{ r.seatingPreference }}</div>
+                <small class="special-req" *ngIf="r.specialRequests">
+                  <i class="ri-chat-1-line"></i> "{{ r.specialRequests }}"
+                </small>
+              </td>
+
+              <td>
+                <span 
+                  class="status-pill"
+                  [class.status-confirmed]="r.status === 'Confirmed'"
+                  [class.status-completed]="r.status === 'Completed'"
+                  [class.status-cancelled]="r.status === 'Cancelled'"
+                >
+                  {{ r.status }}
+                </span>
+              </td>
+
+              <td>
+                <div class="status-action-btns">
+                  <button class="btn-status-confirm" (click)="updateReservationStatus(r.id!, 'Confirmed')">Confirm</button>
+                  <button class="btn-status-complete" (click)="updateReservationStatus(r.id!, 'Completed')">Complete</button>
+                  <button class="btn-status-cancel" (click)="updateReservationStatus(r.id!, 'Cancelled')">Cancel</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noTodayResTpl>
+        <div class="admin-empty-box">
+          <i class="ri-calendar-check-line empty-icon"></i>
+          <h3>No Table Bookings For Today</h3>
+          <p>Table reservations booked for today ({{ getTodayYMD() }}) will be listed here chronologically by time slot.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- ================= TAB 3: CALENDAR REPORTS & CSV DOWNLOAD ================= -->
+    <section *ngIf="activeTab === 'calendar-reports'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <h2 class="tab-title">Calendar Reports & Analytics (दैनिक रिपोर्ट)</h2>
+          <p class="tab-desc">
+            Select any date from the calendar to inspect orders, revenue, and table bookings across branches, and download the report in CSV format.
+          </p>
+        </div>
+
+        <button class="btn-download-csv" (click)="downloadCsvReport()">
+          <i class="ri-download-2-line"></i>
+          <span>Download CSV Report</span>
+        </button>
+      </div>
+
+      <!-- Calendar Controls Bar -->
+      <div class="report-controls-bar">
+        <div class="control-group">
+          <label><i class="ri-calendar-line"></i> Select Date:</label>
+          <input 
+            type="date" 
+            [(ngModel)]="reportDate" 
+            (change)="loadReportData()" 
+            class="report-date-input" 
+          />
+        </div>
+
+        <div class="control-group">
+          <label><i class="ri-map-pin-line"></i> Branch Filter:</label>
+          <select [(ngModel)]="reportBranch" (change)="loadReportData()" class="branch-select">
+            <option value="all">All Shimla Branches</option>
+            <option *ngFor="let b of branchService.branches()" [value]="b.id">{{ b.name }}</option>
+          </select>
+        </div>
+
+        <div class="quick-date-btns">
+          <button 
+            class="btn-quick-date" 
+            [class.active]="reportDate === getTodayYMD()"
+            (click)="setQuickReportDate('today')"
+          >
+            Today
+          </button>
+          <button 
+            class="btn-quick-date" 
+            [class.active]="reportDate === getYesterdayYMD()"
+            (click)="setQuickReportDate('yesterday')"
+          >
+            Yesterday
+          </button>
+          <button 
+            class="btn-quick-date" 
+            [class.active]="!reportDate"
+            (click)="setQuickReportDate('all')"
+          >
+            All Dates
+          </button>
+        </div>
+      </div>
+
+      <!-- Analytics Metric Cards -->
+      <div class="report-metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon-wrap orders-icon">
+            <i class="ri-shopping-bag-3-line"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Total WhatsApp Orders</span>
+            <strong class="metric-val">{{ reportOrders.length }} Orders</strong>
+            <small class="metric-sub">{{ reportDate ? 'For ' + reportDate : 'All time' }}</small>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-wrap revenue-icon">
+            <i class="ri-currency-line"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Total Estimated Revenue</span>
+            <strong class="metric-val revenue-text">₹{{ totalReportRevenue | number }}</strong>
+            <small class="metric-sub">From online WhatsApp orders</small>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-wrap tables-icon">
+            <i class="ri-calendar-event-line"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Table Reservations</span>
+            <strong class="metric-val">{{ reportReservations.length }} Bookings</strong>
+            <small class="metric-sub">{{ reportDate ? 'For ' + reportDate : 'All time' }}</small>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon-wrap filter-icon">
+            <i class="ri-store-2-line"></i>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Selected Scope</span>
+            <strong class="metric-val text-truncate">{{ reportBranch === 'all' ? 'All 5 Branches' : reportBranch }}</strong>
+            <small class="metric-sub">CSV will export these records</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Report Section 1: Orders for selected date -->
+      <div class="report-sub-section">
+        <div class="sub-section-header">
+          <h3><i class="ri-shopping-bag-line"></i> WhatsApp Orders ({{ reportOrders.length }})</h3>
+        </div>
+
+        <div class="table-responsive" *ngIf="reportOrders.length > 0; else noRepOrders">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Time</th>
+                <th>Branch</th>
+                <th>Customer</th>
+                <th>Items Ordered</th>
+                <th>Total (₹)</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ord of reportOrders">
+                <td><strong>#{{ ord.id }}</strong></td>
+                <td>{{ ord.createdAt | date:'shortTime' }}</td>
+                <td><span class="branch-badge">{{ ord.branchName }}</span></td>
+                <td>
+                  <strong>{{ ord.customerName }}</strong>
+                  <div class="cust-phone">{{ ord.customerPhone }}</div>
+                </td>
+                <td>
+                  <ul class="order-items-minilist">
+                    <li *ngFor="let item of ord.items">
+                      {{ item.quantity }}x {{ item.name }} (₹{{ item.subtotal }})
+                    </li>
+                  </ul>
+                </td>
+                <td><strong class="total-highlight">₹{{ ord.totalAmount }}</strong></td>
+                <td><span class="type-pill">{{ ord.orderType }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noRepOrders>
+          <p class="empty-sub-text">No orders recorded for the selected date.</p>
+        </ng-template>
+      </div>
+
+      <!-- Report Section 2: Reservations for selected date -->
+      <div class="report-sub-section">
+        <div class="sub-section-header">
+          <h3><i class="ri-calendar-check-line"></i> Table Reservations ({{ reportReservations.length }})</h3>
+        </div>
+
+        <div class="table-responsive" *ngIf="reportReservations.length > 0; else noRepRes">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Time Slot</th>
+                <th>Branch</th>
+                <th>Customer</th>
+                <th>Guests</th>
+                <th>Seating Preference</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let res of reportReservations">
+                <td>
+                  <div class="time-slot-badge">
+                    <i class="ri-time-line"></i>
+                    <span>{{ res.timeSlot }}</span>
+                  </div>
+                </td>
+                <td><span class="branch-badge">{{ res.branchName }}</span></td>
+                <td>
+                  <strong>{{ res.customerName }}</strong>
+                  <div class="cust-phone">{{ res.customerPhone }}</div>
+                </td>
+                <td><strong>{{ res.guests }} Guests</strong></td>
+                <td>{{ res.seatingPreference }}</td>
+                <td>
+                  <span 
+                    class="status-pill"
+                    [class.status-confirmed]="res.status === 'Confirmed'"
+                    [class.status-completed]="res.status === 'Completed'"
+                    [class.status-cancelled]="res.status === 'Cancelled'"
+                  >
+                    {{ res.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noRepRes>
+          <p class="empty-sub-text">No table reservations recorded for the selected date.</p>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: ALL RESERVATIONS ================= -->
+    <section *ngIf="activeTab === 'all-reservations'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <h2 class="tab-title">All Table Bookings (Master Log)</h2>
+          <p class="tab-desc">All customer table reservations across all dates within the 15-day booking window.</p>
+        </div>
+
+        <div class="filter-wrap">
+          <label>Filter Branch:</label>
+          <select [(ngModel)]="reservationFilterBranch" (change)="loadAllReservations()" class="branch-select">
+            <option value="all">All Shimla Branches</option>
+            <option *ngFor="let b of branchService.branches()" [value]="b.id">{{ b.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive" *ngIf="allReservations.length > 0; else noAllResTpl">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID & Date</th>
+              <th>Customer</th>
+              <th>Branch</th>
+              <th>Slot & Guests</th>
+              <th>Seating & Notes</th>
+              <th>Status</th>
+              <th>Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of allReservations">
+              <td>
+                <span class="ref-code">{{ r.id }}</span>
+                <strong class="res-date">{{ r.date }}</strong>
+              </td>
+              <td>
+                <strong>{{ r.customerName }}</strong>
+                <a [href]="'tel:' + r.customerPhone" class="cust-phone"><i class="ri-phone-line"></i> {{ r.customerPhone }}</a>
+              </td>
+              <td>
+                <span class="branch-badge">{{ r.branchName }}</span>
+              </td>
+              <td>
+                <strong class="res-slot-txt">{{ r.timeSlot }}</strong>
+                <div>{{ r.guests }} Persons</div>
+              </td>
+              <td>
+                <div class="seating-text">{{ r.seatingPreference }}</div>
+                <small class="special-req" *ngIf="r.specialRequests">Note: {{ r.specialRequests }}</small>
+              </td>
+              <td>
+                <span 
+                  class="status-pill"
+                  [class.status-confirmed]="r.status === 'Confirmed'"
+                  [class.status-completed]="r.status === 'Completed'"
+                  [class.status-cancelled]="r.status === 'Cancelled'"
+                >
+                  {{ r.status }}
+                </span>
+              </td>
+              <td>
+                <div class="status-action-btns">
+                  <button class="btn-status-confirm" (click)="updateReservationStatus(r.id!, 'Confirmed')">Confirm</button>
+                  <button class="btn-status-complete" (click)="updateReservationStatus(r.id!, 'Completed')">Complete</button>
+                  <button class="btn-status-cancel" (click)="updateReservationStatus(r.id!, 'Cancelled')">Cancel</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noAllResTpl>
+        <div class="admin-empty-box">
+          <i class="ri-calendar-line empty-icon"></i>
+          <h3>No Reservations Found</h3>
+          <p>Reservations placed by customers via the web booking system will appear here.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- ================= TAB 5: WHATSAPP ORDERS LOG ================= -->
+    <section *ngIf="activeTab === 'whatsapp-orders'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <h2 class="tab-title">Recent WhatsApp Orders Log</h2>
+          <p class="tab-desc">Customer orders dispatched to WhatsApp (+91 9696591167) from the website.</p>
+        </div>
+        <button class="btn-secondary" (click)="loadOrders()">
+          <i class="ri-refresh-line"></i> Refresh
+        </button>
+      </div>
+
+      <div class="table-responsive" *ngIf="ordersList.length > 0; else noOrdersTpl">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Branch</th>
+              <th>Type</th>
+              <th>Items</th>
+              <th>Total Amount</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ord of ordersList">
+              <td><strong>#{{ ord.id }}</strong></td>
+              <td>
+                <strong>{{ ord.customerName }}</strong>
+                <div class="cust-phone">{{ ord.customerPhone }}</div>
+                <small *ngIf="ord.deliveryAddress" class="addr-text">📍 {{ ord.deliveryAddress }}</small>
+              </td>
+              <td><span class="branch-badge">{{ ord.branchName }}</span></td>
+              <td><span class="type-pill">{{ ord.orderType }}</span></td>
+              <td>
+                <ul class="order-items-minilist">
+                  <li *ngFor="let item of ord.items">
+                    {{ item.quantity }}x {{ item.name }} (₹{{ item.subtotal }})
+                  </li>
+                </ul>
+              </td>
+              <td><strong class="total-highlight">₹{{ ord.totalAmount }}</strong></td>
+              <td><span class="order-time">{{ ord.createdAt | date:'short' }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noOrdersTpl>
+        <div class="admin-empty-box">
+          <i class="ri-whatsapp-line empty-icon"></i>
+          <h3>No Logged Orders Yet</h3>
+          <p>Orders sent via WhatsApp on the public website will be tracked here for kitchen records.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- ================= TAB 6: 5 SHIMLA BRANCHES ================= -->
+    <section *ngIf="activeTab === 'branches-info'" class="tab-content-card">
+      <div class="tab-header-row">
+        <div>
+          <h2 class="tab-title">Ashiana Shimla Outlets (5 Branches)</h2>
+          <p class="tab-desc">Official contact numbers, addresses, and operating parameters configured from the flyer.</p>
+        </div>
+      </div>
+
+      <div class="branches-admin-grid">
+        <div *ngFor="let b of branchService.branches()" class="branch-admin-card">
+          <div class="branch-card-top">
+            <h3 class="b-name">{{ b.name }}</h3>
+            <span class="hq-tag" *ngIf="b.isHeadquarter">HQ Outlet</span>
+          </div>
+
+          <p class="b-addr"><i class="ri-map-pin-2-line"></i> {{ b.address }}</p>
+          <p class="b-timing"><i class="ri-time-line"></i> {{ b.timing }}</p>
+
+          <div class="b-contact-block">
+            <strong>Direct Phone Lines:</strong>
+            <div class="phones-wrap">
+              <span *ngFor="let p of b.phones" class="phone-chip">
+                <i class="ri-phone-line"></i> {{ p }}
+              </span>
+            </div>
+          </div>
+
+          <div class="b-whatsapp-block">
+            <strong>WhatsApp Orders Number:</strong>
+            <span class="wa-chip"><i class="ri-whatsapp-line"></i> +{{ b.whatsapp }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Add / Edit Dish Modal -->
+  <div class="modal-backdrop" *ngIf="isDishModalOpen" (click)="closeDishModal()">
+    <div class="modal-content item-modal-box" (click)="$event.stopPropagation()">
+      <button class="modal-close-btn" (click)="closeDishModal()"><i class="ri-close-line"></i></button>
+
+      <div class="modal-header">
+        <h2 class="modal-title">{{ editingDish ? 'Edit Dish for ' + selectedBranchObj?.name : 'Add New Dish to ' + selectedBranchObj?.name }}</h2>
+        <p class="modal-subtitle">
+          Configure dish details, image URL, and price specific to this branch. Changes reflect live on the website!
+        </p>
+      </div>
+
+      <form (ngSubmit)="saveDishForm()" class="item-form">
+        
+        <div class="form-group">
+          <label>Dish Name *</label>
+          <input type="text" [(ngModel)]="dishForm.name" name="name" placeholder="e.g. Kashmiri Dum Aloo" required />
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Category *</label>
+            <select [(ngModel)]="dishForm.category" name="category" required>
+              <option value="sweets">Authentic Sweets 🍬</option>
+              <option value="bakery">Bakery & Cakes 🎂</option>
+              <option value="restaurant">Restaurant Specials 🍛</option>
+              <option value="chinese_snacks">Chinese & Snacks 🥟</option>
+              <option value="beverages">Beverages & Shakes 🥤</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Price for {{ selectedBranchObj?.name }} (₹) *</label>
+            <input type="number" [(ngModel)]="dishForm.price" name="price" required />
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Serving Unit</label>
+            <input type="text" [(ngModel)]="dishForm.unit" name="unit" placeholder="e.g. 500g Box, Full Plate, 1 Pc" />
+          </div>
+
+          <div class="form-group">
+            <label>Dietary Type</label>
+            <select [(ngModel)]="dishForm.isVeg" name="isVeg">
+              <option [ngValue]="true">Pure Vegetarian (Green)</option>
+              <option [ngValue]="false">Non-Vegetarian (Red)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dish Image with Live Preview -->
+        <div class="form-group">
+          <label>Dish Image URL *</label>
+          <input 
+            type="url" 
+            [(ngModel)]="dishForm.image" 
+            name="image" 
+            placeholder="https://images.unsplash.com/..." 
+            required 
+          />
+          <div class="image-preview-box" *ngIf="dishForm.image">
+            <img [src]="dishForm.image" alt="Preview" class="preview-img" (error)="dishForm.image = 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80'" />
+            <span class="preview-caption">Live Image Preview</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="dishForm.description" name="description" rows="2" placeholder="Ingredients, taste profile, heritage notes..."></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group checkbox-row">
+            <label class="check-label">
+              <input type="checkbox" [(ngModel)]="dishForm.available" name="available" />
+              <span>In Stock for this Branch</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-row">
+            <label class="check-label">
+              <input type="checkbox" [(ngModel)]="dishForm.isPopular" name="isPopular" />
+              <span>⭐ Mark as Chef's Special</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="closeDishModal()">Cancel</button>
+          <button type="submit" class="btn-primary">
+            <i class="ri-save-line"></i>
+            <span>{{ editingDish ? 'Save & Update Live' : 'Add Dish to Branch' }}</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,240 @@
+.site-footer {
+  background: #181513;
+  color: #E5E7EB;
+  border-top: 1px solid #292524;
+}
+
+.footer-heritage-strip {
+  background: #231F1C;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.strip-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.88rem;
+  color: #FBBF24;
+  font-weight: 600;
+}
+
+.strip-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.strip-item i {
+  font-size: 1.15rem;
+}
+
+/* Main Content */
+.footer-main-content {
+  padding: 70px 24px 50px;
+  display: grid;
+  grid-template-columns: 1.2fr 1.4fr 1fr;
+  gap: 50px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.footer-official-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: contain;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.footer-brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.brand-tagline {
+  color: #9CA3AF;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.social-links {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.fb-btn:hover {
+  background: #1877F2;
+}
+
+.col-title {
+  color: #FFFFFF;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.col-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background: #F59E0B;
+}
+
+/* Outlets */
+.outlets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.outlet-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.outlet-name {
+  font-size: 0.9rem;
+  color: #FDE68A;
+  display: block;
+}
+
+.outlet-addr {
+  font-size: 0.78rem;
+  color: #9CA3AF;
+  margin: 2px 0 4px;
+}
+
+.outlet-phones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.outlet-phones a {
+  color: #34D399;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+
+.outlet-phones a:hover {
+  color: #F59E0B;
+  text-decoration: underline;
+}
+
+.outlet-phones span {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Nav links */
+.footer-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.footer-nav-list a {
+  color: #D1D5DB;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footer-nav-list a:hover {
+  color: #F59E0B;
+  padding-left: 4px;
+}
+
+.timing-card {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.timing-title {
+  color: #FBBF24;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+
+.timing-card p {
+  font-size: 0.82rem;
+  color: #E5E7EB;
+  margin-bottom: 2px;
+}
+
+.timing-card small {
+  font-size: 0.72rem;
+  color: #9CA3AF;
+}
+
+/* Bottom Bar */
+.footer-bottom-bar {
+  background: #110E0D;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #6B7280;
+}
+
+.order-notice {
+  color: #9CA3AF;
+}
+
+@media (max-width: 1024px) {
+  .footer-main-content {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}

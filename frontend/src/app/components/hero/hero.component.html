@@ -1,0 +1,133 @@
+<section id="hero-section" class="hero-section">
+  <!-- Subtle warm ambient background blobs replicating Image 1 -->
+  <div class="ambient-glow glow-top-left"></div>
+  <div class="ambient-glow glow-bottom-right"></div>
+
+  <!-- Decorative floating food illustrations/vectors -->
+  <div class="floating-doodle doodle-leaf"><i class="ri-leaf-line"></i></div>
+  <div class="floating-doodle doodle-pizza"><i class="ri-restaurant-2-line"></i></div>
+  <div class="floating-doodle doodle-sparkle"><i class="ri-sparkling-fill"></i></div>
+
+  <div class="container hero-container">
+    
+    <!-- Hero Left Column: Copy & CTAs -->
+    <div class="hero-content">
+      
+      <!-- Top Welcome Pill -->
+      <div class="welcome-badge">
+        <span class="badge-dot"></span>
+        <span>Welcome to Ashiana Foods • Shimla 🏔️</span>
+      </div>
+
+      <!-- Main Headline matching Image 1 with hand-drawn oval highlight -->
+      <h1 class="hero-title">
+        Ashiana Sweets & Bakery and Enjoy 
+        <span class="highlight-oval">The Food</span>
+      </h1>
+
+      <!-- Subtitle from flyer & authentic story -->
+      <p class="hero-description">
+        Savor the taste of our signature royal dishes, pure desi ghee sweets, and oven-fresh cakes crafted with locally sourced Himalayan ingredients. Relish every bite with a scenic mountain backdrop across our 5 Shimla branches.
+      </p>
+
+      <!-- CTAs matching Image 1: Reserve a Table & Online Order -->
+      <div class="hero-actions">
+        <button class="btn-primary hero-btn-reserve" (click)="openReservation()">
+          <i class="ri-calendar-check-line"></i>
+          <span>Reserve a Table</span>
+        </button>
+
+        <button class="btn-secondary hero-btn-order" (click)="scrollToMenu()">
+          <i class="ri-whatsapp-line" style="color: #25D366; font-size: 1.2rem;"></i>
+          <span>Order on WhatsApp</span>
+        </button>
+      </div>
+
+      <!-- Operating Hours & Features Meta -->
+      <div class="hero-meta">
+        <div class="meta-item">
+          <i class="ri-time-line meta-icon"></i>
+          <div>
+            <strong>Open Hours:</strong>
+            <span>08:30am - 10:30pm</span>
+          </div>
+        </div>
+
+        <div class="meta-divider"></div>
+
+        <div class="meta-item">
+          <i class="ri-shield-check-line meta-icon"></i>
+          <div>
+            <strong>Zero Login:</strong>
+            <span>Direct WhatsApp Order</span>
+          </div>
+        </div>
+
+        <div class="meta-divider"></div>
+
+        <div class="meta-item call-meta" (click)="openCallModal()">
+          <i class="ri-phone-fill meta-icon call-icon"></i>
+          <div>
+            <strong>Call Branch:</strong>
+            <span>5 Shimla Outlets</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hero Right Column: Circular Platter & Floating Badges matching Image 1 -->
+    <div class="hero-visual">
+      
+      <div class="platter-stage">
+        
+        <!-- Outer circular dashed highlight ring -->
+        <div class="dashed-orbit-ring"></div>
+
+        <!-- Central Circular Dish Platter Image -->
+        <div class="main-dish-circle">
+          <img 
+            src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=900&q=85" 
+            alt="Ashiana Signature Royal Himalayan Feast" 
+            class="platter-img"
+          />
+        </div>
+
+        <!-- Floating Badge: "Best Food 👑" (Top Right) -->
+        <div class="floating-chip chip-best-food">
+          <span>Best Sweets & Dining 👑</span>
+        </div>
+
+        <!-- Floating Rating Card: "Signature Dal Makhani" (Bottom Left) -->
+        <div class="floating-card-review">
+          <div class="review-thumb">
+            <img 
+              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=200&q=80" 
+              alt="Belgian Truffle Cake" 
+            />
+          </div>
+          <div class="review-info">
+            <div class="review-title">Belgian Truffle Cake</div>
+            <div class="review-stars">
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+              <i class="ri-star-fill"></i>
+            </div>
+            <p class="review-desc">Moist chocolate sponge with fresh dairy cream</p>
+            <div class="review-price">₹550 <small>/ 500g</small></div>
+          </div>
+        </div>
+
+        <!-- Floating ingredient accents (Mint leaves, Tomato slice, Onion) -->
+        <div class="floating-garnish garnish-tomato">🍅</div>
+        <div class="floating-garnish garnish-mint">🌿</div>
+        <div class="floating-garnish garnish-sweet">🍬</div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

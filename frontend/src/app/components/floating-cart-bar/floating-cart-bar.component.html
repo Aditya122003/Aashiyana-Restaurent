@@ -1,0 +1,32 @@
+<div 
+  class="floating-cart-pill-wrapper" 
+  *ngIf="cartService.totalItemsCount() > 0 && !cartService.isCartOpen()"
+  (click)="openCart()"
+>
+  <div class="floating-cart-pill">
+    
+    <!-- Left: Cart Icon & Items Count -->
+    <div class="pill-left-section">
+      <div class="pill-icon-badge">
+        <i class="ri-shopping-bag-3-fill"></i>
+        <span class="pill-badge-count">{{ cartService.totalItemsCount() }}</span>
+      </div>
+      <div class="pill-text-info">
+        <span class="pill-items-label">{{ cartService.totalItemsCount() }} {{ cartService.totalItemsCount() === 1 ? 'Item' : 'Items' }}</span>
+        <strong class="pill-amount">₹{{ cartService.subtotal() }}</strong>
+      </div>
+    </div>
+
+    <!-- Center Divider -->
+    <div class="pill-divider"></div>
+
+    <!-- Right: View Cart & WhatsApp Action -->
+    <div class="pill-action-section">
+      <span class="pill-action-title">View Cart & Checkout</span>
+      <div class="pill-arrow-circle">
+        <i class="ri-arrow-right-line"></i>
+      </div>
+    </div>
+
+  </div>
+</div>

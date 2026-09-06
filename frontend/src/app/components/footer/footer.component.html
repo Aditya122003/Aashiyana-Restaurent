@@ -1,0 +1,120 @@
+<footer class="site-footer" id="about-section">
+  <!-- Top Heritage Strip -->
+  <div class="footer-heritage-strip">
+    <div class="container strip-content">
+      <div class="strip-item">
+        <i class="ri-shield-check-line"></i>
+        <span>Pure Desi Ghee & Fresh Himalayan Ingredients</span>
+      </div>
+      <div class="strip-item">
+        <i class="ri-heart-pulse-line"></i>
+        <span>Serving With Authentic Taste Since 1981</span>
+      </div>
+      <div class="strip-item">
+        <i class="ri-whatsapp-line"></i>
+        <span>Instant WhatsApp Ordering & Dine-In Booking</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-main-content">
+    
+    <!-- Col 1: Brand & Philosophy -->
+    <div class="footer-col brand-col">
+      <div class="footer-brand">
+        <img src="/ashiana-logo.png" alt="Ashiana Official Logo" class="footer-official-logo" />
+        <span class="footer-brand-title">Ashiana</span>
+      </div>
+      <p class="brand-tagline">
+        Ashiana Sweets, Bar, Bakery and Restaurant — Savor the taste of our signature dishes, crafted with fresh, locally sourced ingredients. Enjoy a meal with a view as the majestic Himalayan mountains serve as your backdrop.
+      </p>
+      
+      <!-- Social Media Link (User Facebook URL) -->
+      <div class="social-links">
+        <a href="https://www.facebook.com/AshianaFoods/" target="_blank" rel="noopener" class="social-btn fb-btn" title="Follow Ashiana Foods on Facebook">
+          <i class="ri-facebook-fill"></i>
+          <span>Facebook / AshianaFoods</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Col 2: Shimla Branches & Direct Calling (from image 2) -->
+    <div class="footer-col branches-col">
+      <h4 class="col-title">Our 5 Shimla Outlets (Call for Orders)</h4>
+      <div class="outlets-list">
+        
+        <div class="outlet-item">
+          <strong class="outlet-name">📍 Chotta Shimla (Headquarters)</strong>
+          <p class="outlet-addr">Near Post Office, Chotta Shimla, HP 171002</p>
+          <div class="outlet-phones">
+            <a [href]="formatTel('01772621350')"><i class="ri-phone-line"></i> 0177 2621350</a>
+            <span>•</span>
+            <a [href]="formatTel('01772626142')"><i class="ri-phone-line"></i> 2626142</a>
+          </div>
+        </div>
+
+        <div class="outlet-item">
+          <strong class="outlet-name">📍 New Shimla</strong>
+          <p class="outlet-addr">Sector 1, Phase 2, Near BCS, New Shimla, HP 171009</p>
+          <div class="outlet-phones">
+            <a [href]="formatTel('01772925386')"><i class="ri-phone-line"></i> 0177 2925386</a>
+          </div>
+        </div>
+
+        <div class="outlet-item">
+          <strong class="outlet-name">📍 Sanjaulli Engine Ghar</strong>
+          <p class="outlet-addr">Engine Ghar Chowk, Sanjaulli, Shimla, HP 171006</p>
+          <div class="outlet-phones">
+            <a [href]="formatTel('01772841350')"><i class="ri-phone-line"></i> 0177 2841350</a>
+          </div>
+        </div>
+
+        <div class="outlet-item">
+          <strong class="outlet-name">📍 Sanjaulli Main Bazaar</strong>
+          <p class="outlet-addr">Main Market Road, Sanjaulli, Shimla, HP 171006</p>
+          <div class="outlet-phones">
+            <a [href]="formatTel('01772842350')"><i class="ri-phone-line"></i> 0177 2842350</a>
+            <span>•</span>
+            <a [href]="formatTel('01772843350')"><i class="ri-phone-line"></i> 0177 2843350</a>
+          </div>
+        </div>
+
+        <div class="outlet-item">
+          <strong class="outlet-name">📍 Panthaghati</strong>
+          <p class="outlet-addr">Near Secretariat Colony, Panthaghati, HP 171009</p>
+          <div class="outlet-phones">
+            <a [href]="formatTel('01772620350')"><i class="ri-phone-line"></i> 0177 2620350</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Col 3: Quick Navigation & Timing -->
+    <div class="footer-col links-col">
+      <h4 class="col-title">Quick Actions</h4>
+      <ul class="footer-nav-list">
+        <li><a (click)="scrollTo('hero-section')">Home</a></li>
+        <li><a (click)="scrollTo('dishes-section')">Popular Dishes</a></li>
+        <li><a (click)="scrollTo('bakery-section')">Designer Cakes & Mithai</a></li>
+        <li><a (click)="openReservation()">Reserve a Table (15-Day Window)</a></li>
+        <li><a (click)="branchService.openCallModal()">Call Nearest Branch</a></li>
+      </ul>
+
+      <div class="timing-card">
+        <h5 class="timing-title"><i class="ri-time-line"></i> Operating Hours</h5>
+        <p>Monday – Sunday: 08:30 AM – 10:30 PM</p>
+        <small>Fresh baking starts at 07:30 AM daily</small>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Copyright Bar -->
+  <div class="footer-bottom-bar">
+    <div class="container bottom-content">
+      <p>© 1981 - 2026 Ashiana Sweets, Bar, Bakery & Restaurant. All Rights Reserved. Shimla, Himachal Pradesh.</p>
+      <p class="order-notice">Direct WhatsApp Ordering • No Registration Required</p>
+    </div>
+  </div>
+</footer>

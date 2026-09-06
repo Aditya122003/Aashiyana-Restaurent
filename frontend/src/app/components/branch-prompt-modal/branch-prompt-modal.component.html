@@ -1,0 +1,73 @@
+<!-- Backdrop: clicking outside closes if a branch has already been selected -->
+<div class="modal-backdrop branch-force-backdrop" *ngIf="branchService.isPromptOpen()" (click)="closeModal()">
+  <div class="modal-content branch-prompt-box" (click)="$event.stopPropagation()">
+    
+    <!-- Close button (shown if user already has a branch selected) -->
+    <button class="modal-close-btn" *ngIf="branchService.selectedBranch()" (click)="closeModal()" title="Close modal">
+      <i class="ri-close-line"></i>
+    </button>
+
+    <!-- Header -->
+    <div class="prompt-header">
+      <div class="prompt-logo-wrap">
+        <img src="/ashiana-logo.png" alt="Ashiana Official Logo" class="prompt-official-logo" />
+      </div>
+      <span class="prompt-badge">ASHIANA FOODS SHIMLA</span>
+      <h2 class="prompt-title">Select Your Branch</h2>
+      <p class="prompt-subtitle">
+        Please select your branch to view accurate menu prices and place your order on WhatsApp.
+      </p>
+    </div>
+
+    <!-- Simple & Elegant Dropdown Selector -->
+    <div class="dropdown-selection-zone">
+      <label class="dropdown-label">
+        <i class="ri-store-2-line"></i> Choose from 5 Shimla Outlets:
+      </label>
+      
+      <div class="custom-select-wrapper">
+        <select 
+          [(ngModel)]="tempSelectedBranchId" 
+          class="main-branch-dropdown"
+        >
+          <option value="" disabled selected>-- Select Your Shimla Branch --</option>
+          <option *ngFor="let b of branchService.branches()" [value]="b.id">
+            📍 {{ b.name }} ({{ b.phones[0] }})
+          </option>
+        </select>
+        <i class="ri-arrow-down-s-line select-chevron"></i>
+      </div>
+
+      <!-- Preview of the selected branch details (only shown when a branch is selected) -->
+      <div class="branch-preview-pill" *ngIf="currentSelectedBranch">
+        <div class="preview-line">
+          <i class="ri-map-pin-line"></i>
+          <span>{{ currentSelectedBranch.address }}</span>
+        </div>
+        <div class="preview-line">
+          <i class="ri-phone-line"></i>
+          <span>Order Line: {{ currentSelectedBranch.phones[0] }}</span>
+          <span class="preview-open-tag">• Open Now ({{ currentSelectedBranch.timing }})</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Button -->
+    <div class="prompt-footer">
+      <button 
+        class="btn-primary btn-confirm-branch" 
+        [disabled]="!tempSelectedBranchId"
+        (click)="confirmSelection()"
+      >
+        <i class="ri-check-line" *ngIf="tempSelectedBranchId"></i>
+        <i class="ri-hand-coin-line" *ngIf="!tempSelectedBranchId"></i>
+        <span>{{ tempSelectedBranchId ? 'Confirm Branch & View Menu' : 'Please Choose a Branch Above' }}</span>
+      </button>
+      
+      <small class="prompt-hint">
+        Please select your branch to view accurate live prices & WhatsApp ordering.
+      </small>
+    </div>
+
+  </div>
+</div>

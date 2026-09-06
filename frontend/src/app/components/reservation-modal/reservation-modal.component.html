@@ -1,0 +1,199 @@
+<div class="modal-backdrop" *ngIf="reservationService.isModalOpen()" (click)="close()">
+  <div class="modal-content reservation-modal-box" (click)="$event.stopPropagation()">
+    
+    <!-- Close X Button -->
+    <button class="modal-close-btn" (click)="close()" title="Close">
+      <i class="ri-close-line"></i>
+    </button>
+
+    <!-- State 1: Booking Form -->
+    <ng-container *ngIf="!confirmedBooking">
+      <div class="modal-header">
+        <span class="pill-tag">DINE-IN RESERVATION</span>
+        <h2 class="modal-title">Book a Table at Ashiana</h2>
+        <p class="modal-subtitle">
+          Experience authentic culinary perfection with Himalayan views. 
+          <span class="window-note">⚡ Advance bookings open for <strong>Today up to Next 15 Days</strong>.</span>
+        </p>
+      </div>
+
+      <form (ngSubmit)="submitReservation()" class="reservation-form">
+        
+        <!-- Branch Selector (Defaults to active selected branch) -->
+        <div class="form-group">
+          <label>
+            <i class="ri-store-2-line"></i> Select Shimla Branch *
+            <span class="active-branch-hint" *ngIf="branchService.selectedBranch()">
+              • Selected: <strong>{{ branchService.selectedBranch()?.name }}</strong>
+            </span>
+          </label>
+          <select [(ngModel)]="formData.branchId" name="branchId" required>
+            <option value="" disabled>Choose your branch...</option>
+            <option *ngFor="let b of branchService.branches()" [value]="b.id">
+              📍 {{ b.name }} ({{ b.landmark }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Date & Time Row (Strict 15 days window) -->
+        <div class="form-row-2">
+          
+          <div class="form-group">
+            <label>
+              <i class="ri-calendar-line"></i> Date (Next 15 Days Window) *
+            </label>
+            <input 
+              type="date" 
+              [(ngModel)]="formData.date" 
+              name="date" 
+              [min]="reservationService.minDate()" 
+              [max]="reservationService.maxDate()" 
+              required 
+              class="date-input"
+            />
+            <small class="field-hint">Allowed: {{ reservationService.minDate() }} to {{ reservationService.maxDate() }}</small>
+          </div>
+
+          <div class="form-group">
+            <label><i class="ri-time-line"></i> Preferred Time Slot *</label>
+            <select [(ngModel)]="formData.timeSlot" name="timeSlot" required>
+              <option *ngFor="let slot of reservationService.timeSlots()" [value]="slot">
+                {{ slot }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Guests & Seating Preference -->
+        <div class="form-row-2">
+          
+          <div class="form-group">
+            <label><i class="ri-group-line"></i> Number of Guests *</label>
+            <select [(ngModel)]="formData.guests" name="guests" required>
+              <option [value]="1">1 Person (Solo Dining)</option>
+              <option [value]="2">2 Persons (Couple)</option>
+              <option [value]="4">4 Persons (Family / Small Group)</option>
+              <option [value]="6">6 Persons</option>
+              <option [value]="8">8 Persons</option>
+              <option [value]="10">10+ Persons (Large Gathering)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="ri-layout-masonry-line"></i> Seating Area</label>
+            <select [(ngModel)]="formData.seatingPreference" name="seatingPreference">
+              <option value="Window View with Mountain Scenic">Window View (Mountain Vista)</option>
+              <option value="Main Dining Hall">Main Dining Hall (Cozy Family)</option>
+              <option value="Terrace / Outdoor Balcony">Terrace / Balcony</option>
+              <option value="Private Dining Booth">Private Dining Booth</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Customer Contact Details -->
+        <div class="form-row-2">
+          
+          <div class="form-group">
+            <label><i class="ri-user-3-line"></i> Your Full Name *</label>
+            <input 
+              type="text" 
+              [(ngModel)]="formData.customerName" 
+              name="customerName" 
+              placeholder="e.g. Vikram Thakur" 
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label><i class="ri-phone-line"></i> Contact Mobile Number *</label>
+            <input 
+              type="tel" 
+              [(ngModel)]="formData.customerPhone" 
+              name="customerPhone" 
+              placeholder="e.g. 98160 XXXXX" 
+              required 
+            />
+          </div>
+
+        </div>
+
+        <!-- Special Requests -->
+        <div class="form-group">
+          <label><i class="ri-cake-line"></i> Special Occasion / Requests (Optional)</label>
+          <input 
+            type="text" 
+            [(ngModel)]="formData.specialRequests" 
+            name="specialRequests" 
+            placeholder="e.g. Birthday celebration, Anniversary cake, High chair for toddler" 
+          />
+        </div>
+
+        <!-- Error Message -->
+        <div class="form-error-alert" *ngIf="errorMessage">
+          <i class="ri-error-warning-line"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="close()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+            <i class="ri-calendar-check-fill"></i>
+            <span>{{ isSubmitting ? 'Confirming Table...' : 'Confirm Table Reservation' }}</span>
+          </button>
+        </div>
+
+      </form>
+    </ng-container>
+
+    <!-- State 2: Reservation Confirmation Ticket -->
+    <ng-container *ngIf="confirmedBooking">
+      <div class="booking-ticket">
+        
+        <div class="ticket-badge-icon">
+          <i class="ri-checkbox-circle-fill"></i>
+        </div>
+
+        <h2 class="ticket-title">Table Reserved Successfully!</h2>
+        <p class="ticket-subtitle">
+          We've reserved your table at <strong>Ashiana {{ confirmedBooking.branchName }}</strong>.
+        </p>
+
+        <div class="ticket-summary-box">
+          <div class="ticket-row">
+            <span class="t-label">Booking Reference:</span>
+            <strong class="t-val">{{ confirmedBooking.id }}</strong>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Reserved For:</span>
+            <span class="t-val">{{ confirmedBooking.customerName }} ({{ confirmedBooking.guests }} Guests)</span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Date & Time:</span>
+            <strong class="t-val text-amber">{{ confirmedBooking.date }} at {{ confirmedBooking.timeSlot }}</strong>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Branch:</span>
+            <span class="t-val">{{ confirmedBooking.branchName }}</span>
+          </div>
+          <div class="ticket-row">
+            <span class="t-label">Seating:</span>
+            <span class="t-val">{{ confirmedBooking.seatingPreference }}</span>
+          </div>
+        </div>
+
+        <div class="ticket-actions">
+          <button class="btn-whatsapp" (click)="shareOnWhatsApp()">
+            <i class="ri-whatsapp-fill"></i>
+            <span>Send Details to Branch on WhatsApp</span>
+          </button>
+          <button class="btn-secondary" (click)="close()">Done</button>
+        </div>
+
+      </div>
+    </ng-container>
+
+  </div>
+</div>

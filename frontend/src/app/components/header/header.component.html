@@ -1,0 +1,141 @@
+<header class="navbar-wrapper">
+  <!-- Top Announcement Bar with Shimla Himalayan theme & Quick Branch Call -->
+  <div class="top-announcement-bar">
+    <div class="container top-bar-content">
+      <div class="announcement-left">
+        <span class="heritage-tag">🏔️ Serving Shimla Since 1981</span>
+        <span class="divider">|</span>
+        <span class="highlight-text">Sweets • Bakery • Restaurant • Bar</span>
+      </div>
+      <div class="announcement-right">
+        <button class="top-call-btn" (click)="openCallModal()">
+          <i class="ri-phone-fill"></i>
+          <span>Contact Branches (5 Outlets)</span>
+        </button>
+        <span class="divider">|</span>
+        <div class="timing-badge">
+          <i class="ri-time-line"></i>
+          <span>Open: 08:30 AM - 10:30 PM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <nav class="main-navbar">
+    <div class="container nav-container">
+      
+      <!-- Brand Logo: Official Ashiana Emblem -->
+      <a routerLink="/" class="brand-logo">
+        <div class="logo-icon-wrap">
+          <img src="/ashiana-logo.png" alt="Ashiana Official Logo" class="official-brand-logo" />
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Ashiana</span>
+          <span class="brand-subtitle">SWEETS, BAKERY & RESTAURANT</span>
+        </div>
+      </a>
+
+      <!-- Active Branch Selector Dropdown -->
+      <!-- Active Branch Selector Dropdown (Matches user image exactly) -->
+      <div class="branch-selector-wrapper">
+        <button class="branch-selector-btn" (click)="toggleBranchDropdown()" title="Select your branch to view accurate prices">
+          <div class="branch-pin-icon">
+            <i class="ri-map-pin-2-fill"></i>
+          </div>
+          <div class="branch-info-text">
+            <span class="selector-label">ORDERING FROM:</span>
+            <span class="current-branch-name">{{ branchService.selectedBranch()?.name || 'Chotta Shimla' }}</span>
+          </div>
+          <i [class]="isBranchDropdownOpen ? 'ri-arrow-up-s-line chevron-icon' : 'ri-arrow-down-s-line chevron-icon'"></i>
+        </button>
+
+        <div class="branch-dropdown-menu" *ngIf="isBranchDropdownOpen">
+          <div class="dropdown-header">
+            <span>Select Shimla Branch</span>
+            <button class="open-modal-link" (click)="openBranchPrompt()">Full View <i class="ri-external-link-line"></i></button>
+          </div>
+          <div class="dropdown-items">
+            <div 
+              *ngFor="let branch of branchService.branches()" 
+              class="dropdown-branch-item"
+              [class.active]="branchService.selectedBranch()?.id === branch.id"
+              (click)="selectBranch(branch)"
+            >
+              <div class="branch-item-title">
+                <i class="ri-map-pin-line"></i>
+                <strong>{{ branch.name }}</strong>
+                <span class="hq-pill" *ngIf="branch.isHeadquarter">HQ</span>
+              </div>
+              <p class="branch-item-addr">{{ branch.landmark }}</p>
+              <div class="branch-item-phone">
+                <i class="ri-phone-line"></i> {{ branch.phones[0] }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li><a (click)="scrollTo('hero-section')" class="nav-item">Home</a></li>
+        <li><a (click)="scrollTo('dishes-section')" class="nav-item">Menu</a></li>
+        <li><a (click)="scrollTo('bakery-section')" class="nav-item">Bakery & Sweets</a></li>
+        <li><a (click)="scrollTo('about-section')" class="nav-item">About Us</a></li>
+      </ul>
+
+      <!-- Navbar Action Buttons -->
+      <div class="nav-actions">
+        <!-- Single Contact Branches Button -->
+        <button class="action-btn contact-action-btn" (click)="openCallModal()" title="Contact Shimla Branches">
+          <i class="ri-phone-fill"></i>
+          <span class="btn-label">Contact Branches</span>
+        </button>
+
+        <!-- Reserve Table Button (Matching Image 1 button style) -->
+        <button class="action-btn reserve-action-btn" (click)="openReservation()" title="Reserve a table in advance">
+          <i class="ri-calendar-check-line"></i>
+          <span>Reserve Table</span>
+        </button>
+
+        <!-- Cart Floating Badge / Button -->
+        <button class="cart-trigger-btn" (click)="openCart()" [class.has-items]="cartService.totalItemsCount() > 0" title="View Cart">
+          <div class="cart-icon-wrap">
+            <i class="ri-shopping-bag-3-fill"></i>
+            <span class="cart-count" *ngIf="cartService.totalItemsCount() > 0">{{ cartService.totalItemsCount() }}</span>
+          </div>
+          <div class="cart-total" *ngIf="cartService.totalItemsCount() > 0">
+            ₹{{ cartService.subtotal() }}
+          </div>
+        </button>
+
+        <!-- Mobile Menu Hamburger -->
+        <button class="mobile-toggle-btn" (click)="isMobileMenuOpen = !isMobileMenuOpen">
+          <i [class]="isMobileMenuOpen ? 'ri-close-line' : 'ri-menu-3-line'"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+      <div class="mobile-branch-picker">
+        <span class="label">Select Branch:</span>
+        <select 
+          [value]="branchService.selectedBranch()?.id" 
+          (change)="branchService.selectBranchById($any($event.target).value)"
+        >
+          <option *ngFor="let b of branchService.branches()" [value]="b.id">{{ b.name }}</option>
+        </select>
+      </div>
+      <ul class="mobile-nav-list">
+        <li><a (click)="scrollTo('hero-section')"><i class="ri-home-line"></i> Home</a></li>
+        <li><a (click)="scrollTo('dishes-section')"><i class="ri-restaurant-line"></i> Menu & Specials</a></li>
+        <li><a (click)="scrollTo('bakery-section')"><i class="ri-cake-3-line"></i> Bakery & Sweets</a></li>
+        <li><a (click)="scrollTo('about-section')"><i class="ri-information-line"></i> About Ashiana</a></li>
+        <li><a (click)="openCallModal()"><i class="ri-phone-line"></i> Contact Branches</a></li>
+        <li><a (click)="openReservation()"><i class="ri-calendar-event-line"></i> Reserve a Table</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>

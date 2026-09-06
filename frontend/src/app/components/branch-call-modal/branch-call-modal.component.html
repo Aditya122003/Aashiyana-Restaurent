@@ -1,0 +1,57 @@
+<div class="modal-backdrop" *ngIf="branchService.isCallModalOpen()" (click)="close()">
+  <div class="modal-content call-modal-box" (click)="$event.stopPropagation()">
+    
+    <button class="modal-close-btn" (click)="close()" title="Close">
+      <i class="ri-close-line"></i>
+    </button>
+
+    <div class="modal-header">
+      <div class="header-icon">
+        <i class="ri-phone-fill"></i>
+      </div>
+      <h2 class="modal-title">Contact Branches</h2>
+      <p class="modal-subtitle">
+        Direct phone lines for all 5 Ashiana Shimla Outlets. Click any number below to call directly.
+      </p>
+    </div>
+
+    <div class="branches-list">
+      
+      <div 
+        *ngFor="let branch of branchService.branches()" 
+        class="branch-card-row"
+        [class.active]="branchService.selectedBranch()?.id === branch.id"
+      >
+        <div class="branch-meta">
+          <div class="branch-headline">
+            <span class="branch-name">{{ branch.name }}</span>
+            <span class="hq-badge" *ngIf="branch.isHeadquarter">HQ</span>
+            <span class="active-badge" *ngIf="branchService.selectedBranch()?.id === branch.id">Current Branch</span>
+          </div>
+          <p class="branch-address"><i class="ri-map-pin-2-line"></i> {{ branch.address }}</p>
+          <span class="branch-hours"><i class="ri-time-line"></i> {{ branch.timing }}</span>
+        </div>
+
+        <div class="branch-call-actions">
+          <a 
+            *ngFor="let phone of branch.phones" 
+            [href]="formatTel(phone)" 
+            class="phone-call-btn"
+            title="Call {{ phone }}"
+          >
+            <i class="ri-phone-fill"></i>
+            <span class="phone-number">{{ phone }}</span>
+            <span class="call-badge"><i class="ri-arrow-right-up-line"></i> Call Now</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer-note">
+      <i class="ri-information-line"></i>
+      <span>For home delivery & orders, you can also add items to cart and checkout via WhatsApp!</span>
+    </div>
+
+  </div>
+</div>

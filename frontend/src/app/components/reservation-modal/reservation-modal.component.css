@@ -1,0 +1,213 @@
+.reservation-modal-box {
+  padding: 36px;
+  max-width: 620px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FAF5EE;
+  color: #1C1917;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #E5E7EB;
+}
+
+.pill-tag {
+  display: inline-block;
+  background: #FEF3C7;
+  color: #B45309;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.modal-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1C1917;
+  margin-bottom: 6px;
+}
+
+.modal-subtitle {
+  font-size: 0.92rem;
+  color: #6B7280;
+  margin-bottom: 24px;
+}
+
+.window-note {
+  display: block;
+  color: #D97706;
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.active-branch-hint {
+  font-size: 0.75rem;
+  color: #D97706;
+  font-weight: 600;
+}
+
+.active-branch-hint strong {
+  color: #B45309;
+}
+
+.form-group label i {
+  color: #D97706;
+}
+
+.form-group input, .form-group select {
+  padding: 10px 14px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  background: #FFFFFF;
+  color: #1C1917;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus, .form-group select:focus {
+  border-color: #F59E0B;
+}
+
+.date-input {
+  border-color: #FBBF24 !important;
+  background: #FFFDF9 !important;
+  font-weight: 600;
+}
+
+.field-hint {
+  font-size: 0.72rem;
+  color: #92400E;
+}
+
+.form-error-alert {
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  color: #B91C1C;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Confirmation Ticket */
+.booking-ticket {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.ticket-badge-icon {
+  font-size: 3.8rem;
+  color: #15803D;
+  margin-bottom: 8px;
+}
+
+.ticket-title {
+  font-size: 1.8rem;
+  color: #1C1917;
+  margin-bottom: 4px;
+}
+
+.ticket-subtitle {
+  color: #6B7280;
+  margin-bottom: 24px;
+}
+
+.ticket-summary-box {
+  background: #FAF5EE;
+  border: 1.5px dashed #E5D5C0;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.92rem;
+}
+
+.t-label {
+  color: #6B7280;
+}
+
+.t-val {
+  color: #1C1917;
+}
+
+.text-amber {
+  color: #D97706;
+}
+
+.ticket-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .reservation-modal-box {
+    padding: 24px 16px;
+  }
+}

@@ -1,0 +1,169 @@
+<div class="cart-backdrop" *ngIf="cartService.isCartOpen()" (click)="close()">
+  <div class="cart-drawer-panel" (click)="$event.stopPropagation()">
+    
+    <!-- Drawer Header -->
+    <div class="drawer-header">
+      <div class="drawer-title-wrap">
+        <i class="ri-shopping-bag-3-fill header-bag-icon"></i>
+        <div>
+          <h2 class="drawer-title">Your Order Cart</h2>
+          <span class="drawer-branch-tag">
+            Ordering from: <strong>{{ branchService.selectedBranch()?.name }}</strong>
+          </span>
+        </div>
+      </div>
+
+      <button class="drawer-close-btn" (click)="close()">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Body -->
+    <div class="drawer-body" *ngIf="cartService.cartItems().length > 0; else emptyCartTpl">
+      
+      <!-- List of Cart Items -->
+      <div class="cart-items-container">
+        <div *ngFor="let item of cartService.cartItems()" class="cart-item-row">
+          
+          <img [src]="item.item.image" [alt]="item.item.name" class="item-thumbnail" />
+          
+          <div class="item-info">
+            <div class="item-top">
+              <span [class]="item.item.isVeg ? 'veg-badge' : 'non-veg-badge'"></span>
+              <h4 class="item-name">{{ item.item.name }}</h4>
+            </div>
+            <span class="item-unit">{{ item.item.unit }}</span>
+            <div class="item-calc">
+              <span class="unit-price">₹{{ item.unitPrice }}</span>
+              <span class="multiplier">× {{ item.quantity }}</span>
+              <strong class="item-total">₹{{ item.unitPrice * item.quantity }}</strong>
+            </div>
+          </div>
+
+          <!-- Quantity Controller -->
+          <div class="item-actions">
+            <div class="qty-pill">
+              <button class="qty-btn" (click)="cartService.updateQuantity(item.item.id, -1)">−</button>
+              <span class="qty-num">{{ item.quantity }}</span>
+              <button class="qty-btn" (click)="cartService.updateQuantity(item.item.id, 1)">+</button>
+            </div>
+            <button class="item-remove-btn" (click)="cartService.removeFromCart(item.item.id)" title="Remove">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Customer Checkout Details (Zero Login Required!) -->
+      <div class="checkout-form-box">
+        <div class="form-banner">
+          <i class="ri-whatsapp-line" style="color: #25D366; font-size: 1.3rem;"></i>
+          <div>
+            <strong>Instant WhatsApp Checkout</strong>
+            <small>No account or password needed! Sent directly to branch.</small>
+          </div>
+        </div>
+
+        <!-- Order Type -->
+        <div class="order-type-picker">
+          <label class="type-pill" [class.selected]="orderType === 'Takeaway'">
+            <input type="radio" [(ngModel)]="orderType" value="Takeaway" name="orderType" />
+            <i class="ri-takeaway-line"></i>
+            <span>Takeaway / Pickup</span>
+          </label>
+
+          <label class="type-pill" [class.selected]="orderType === 'Delivery'">
+            <input type="radio" [(ngModel)]="orderType" value="Delivery" name="orderType" />
+            <i class="ri-riding-line"></i>
+            <span>Home Delivery</span>
+          </label>
+
+          <label class="type-pill" [class.selected]="orderType === 'Dine-In'">
+            <input type="radio" [(ngModel)]="orderType" value="Dine-In" name="orderType" />
+            <i class="ri-restaurant-line"></i>
+            <span>Dine-In</span>
+          </label>
+        </div>
+
+        <!-- Customer Inputs -->
+        <div class="inputs-grid">
+          <div class="input-wrap">
+            <label>Your Name *</label>
+            <input type="text" [(ngModel)]="customerName" placeholder="e.g. Rahul Sharma" />
+          </div>
+
+          <div class="input-wrap">
+            <label>Mobile Number *</label>
+            <input type="tel" [(ngModel)]="customerPhone" placeholder="e.g. 98160 12345" />
+          </div>
+        </div>
+
+        <!-- Delivery Address if delivery chosen -->
+        <div class="input-wrap" *ngIf="orderType === 'Delivery'">
+          <label>Shimla Delivery Address *</label>
+          <textarea 
+            [(ngModel)]="deliveryAddress" 
+            placeholder="House/Room No., Street, Landmark in Shimla..." 
+            rows="2"
+          ></textarea>
+        </div>
+
+        <!-- Special Notes -->
+        <div class="input-wrap">
+          <label>Cooking Instruction / Note</label>
+          <input type="text" [(ngModel)]="orderNotes" placeholder="e.g. Less spicy, send fresh cutlery, birthday tag" />
+        </div>
+
+        <!-- Validation Alert -->
+        <div class="form-alert" *ngIf="errorMessage">
+          <i class="ri-error-warning-line"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Empty Cart Template -->
+    <ng-template #emptyCartTpl>
+      <div class="empty-cart-state">
+        <div class="empty-cart-icon">
+          <i class="ri-shopping-cart-line"></i>
+        </div>
+        <h3>Your Cart is Empty</h3>
+        <p>Explore our royal sweets, bakery items and restaurant specials to add delicious dishes!</p>
+        <button class="btn-primary" (click)="close()">
+          Browse Menu
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- Drawer Footer -->
+    <div class="drawer-footer" *ngIf="cartService.cartItems().length > 0">
+      
+      <div class="footer-totals">
+        <div class="totals-row">
+          <span>Items ({{ cartService.totalItemsCount() }}):</span>
+          <span>₹{{ cartService.subtotal() }}</span>
+        </div>
+        <div class="totals-row grand-total">
+          <strong>Grand Total:</strong>
+          <strong>₹{{ cartService.subtotal() }}</strong>
+        </div>
+      </div>
+
+      <!-- Main WhatsApp Order CTA -->
+      <button class="btn-whatsapp btn-order-wa" (click)="submitWhatsAppOrder()">
+        <i class="ri-whatsapp-fill"></i>
+        <span>Order on WhatsApp ({{ branchService.selectedBranch()?.name }})</span>
+      </button>
+
+      <p class="wa-disclaimer">
+        Clicking will open WhatsApp with your prefilled order to the branch operator.
+      </p>
+
+    </div>
+
+  </div>
+</div>
