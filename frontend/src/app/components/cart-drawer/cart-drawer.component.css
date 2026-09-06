@@ -129,8 +129,9 @@
 }
 
 .item-unit {
-  font-size: 0.72rem;
-  color: #9CA3AF;
+  font-size: 0.78rem;
+  color: #111827;
+  font-weight: 600;
   display: block;
 }
 
@@ -143,7 +144,8 @@
 }
 
 .unit-price {
-  color: #6B7280;
+  color: #111827;
+  font-weight: 600;
 }
 
 .multiplier {

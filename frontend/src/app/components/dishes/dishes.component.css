@@ -403,8 +403,9 @@
 }
 
 .dish-description {
-  font-size: 0.82rem;
-  color: #6B7280;
+  font-size: 0.85rem;
+  color: #111827;
+  font-weight: 500;
   line-height: 1.45;
   margin-bottom: 18px;
   flex: 1;
@@ -442,9 +443,10 @@
 }
 
 .price-unit {
-  font-size: 0.72rem;
-  color: #9CA3AF;
-  margin-left: 2px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #111827;
+  margin-left: 3px;
 }
 
 .branch-custom-indicator {
